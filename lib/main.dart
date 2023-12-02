@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:herpi/pages/Home/home.dart';
+import 'package:herpi/pages/home/home.dart';
 import 'package:herpi/providers/reptiles_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +16,12 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => ReptilesProvider()),
       ],
-      child: const MaterialApp(
+     
+      child:   MaterialApp(
+        theme: ThemeData(
+        primaryColor: Colors.white, 
+        hintColor: Colors.white, 
+        scaffoldBackgroundColor: Colors.white,),
         debugShowCheckedModeBanner: false,
         home: HomePge(),
       ),
