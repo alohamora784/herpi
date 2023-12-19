@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:herpi/models/reptiles.dart';
-import 'package:herpi/pages/Reptile_page.dart/Reptile.dart';
+
+import 'package:herpi/pages/Reptile_page.dart/reptile_page.dart';
 import 'package:herpi/providers/reptiles_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,7 @@ class _AllReptilesListState extends State<AllReptilesList> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ReptilesProvider>(builder: (_, firstprovider, __) {
-      List<Reptile> allreptiles = firstprovider.allreptiles;
+      List<Reptile> allreptiles = firstprovider.reptilesbyslider;
       return Column(
         children: [
           for (int i = 0; i < allreptiles.length; i++)
@@ -33,6 +34,8 @@ class _AllReptilesListState extends State<AllReptilesList> {
                             MaterialPageRoute(
                               builder: (context) => ReptilesPage(
                                 id: allreptiles[i].id,
+                                hasredfleg: allreptiles[i].hasRedFlag,
+                                scientificName: allreptiles[i].scientificName,
                               ),
                             ),
                           );
@@ -78,6 +81,24 @@ class _AllReptilesListState extends State<AllReptilesList> {
                           ),
                         ),
                       ),
+                      allreptiles[i].hasRedFlag
+                          ? Positioned(
+                              top: 10,
+                              right: 10,
+                              child: Container(
+                                height: 30,
+                                width: 30,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Color.fromARGB(255, 255, 6, 85),
+                                ),
+                                child: const Icon(
+                                  Icons.flag,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
+                          : Container(),
                     ],
                   ),
                   const SizedBox(height: 10),

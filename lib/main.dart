@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:herpi/pages/home/home.dart';
+import 'package:herpi/providers/reptile_category_provider.dart';
 import 'package:herpi/providers/reptiles_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -15,13 +16,14 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ReptilesProvider()),
+        ChangeNotifierProvider(create: (_) => ReptileCategoryProvider()),
       ],
-     
-      child:   MaterialApp(
+      child: MaterialApp(
         theme: ThemeData(
-        primaryColor: Colors.white, 
-        hintColor: Colors.white, 
-        scaffoldBackgroundColor: Colors.white,),
+          primaryColor: Colors.white,
+          hintColor: Colors.white,
+          scaffoldBackgroundColor: Colors.white,
+        ),
         debugShowCheckedModeBanner: false,
         home: HomePge(),
       ),

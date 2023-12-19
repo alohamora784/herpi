@@ -34,7 +34,12 @@ class _HomePgeState extends State<HomePge> {
       await _getLocation();
 
       await Provider.of<ReptilesProvider>(context, listen: false)
-          .fetchReptiles(_latitude, _longitude);
+          .fetchLocalReptiles(_latitude, _longitude);
+
+      await Provider.of<ReptilesProvider>(context, listen: false)
+          .categoryslider(selectedIndex);
+      await Provider.of<ReptilesProvider>(context, listen: false)
+          .filterbyslider(selectedIndex);
     } catch (e) {
       print("Error during initialization: $e");
     } finally {
@@ -78,7 +83,7 @@ class _HomePgeState extends State<HomePge> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MyAppBar(),
+      appBar:  MyAppBar(selectedindex: selectedIndex,),
       body: SafeArea(
         child: ListView(
           children: [
@@ -91,6 +96,10 @@ class _HomePgeState extends State<HomePge> {
                   onTap: () {
                     setState(() {
                       selectedIndex = 0;
+                      Provider.of<ReptilesProvider>(context, listen: false)
+                          .categoryslider(selectedIndex);
+                      Provider.of<ReptilesProvider>(context, listen: false)
+                          .filterbyslider(selectedIndex);
                     });
                   },
                   child: Column(
@@ -118,6 +127,10 @@ class _HomePgeState extends State<HomePge> {
                   onTap: () {
                     setState(() {
                       selectedIndex = 1;
+                      Provider.of<ReptilesProvider>(context, listen: false)
+                          .categoryslider(selectedIndex);
+                      Provider.of<ReptilesProvider>(context, listen: false)
+                          .filterbyslider(selectedIndex);
                     });
                   },
                   child: Column(
@@ -145,6 +158,10 @@ class _HomePgeState extends State<HomePge> {
                   onTap: () {
                     setState(() {
                       selectedIndex = 2;
+                      Provider.of<ReptilesProvider>(context, listen: false)
+                          .categoryslider(selectedIndex);
+                      Provider.of<ReptilesProvider>(context, listen: false)
+                          .filterbyslider(selectedIndex);
                     });
                   },
                   child: Column(

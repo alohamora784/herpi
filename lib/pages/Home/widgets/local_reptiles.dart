@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:herpi/models/reptiles.dart';
-import 'package:herpi/pages/Reptile_page.dart/Reptile.dart';
+import 'package:herpi/pages/Reptile_page.dart/reptile_page.dart';
+
 import 'package:herpi/providers/reptiles_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -18,26 +19,8 @@ class _LocalReptilesListState extends State<LocalReptilesList> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ReptilesProvider>(builder: (_, firstprovider, __) {
-      List<Reptile> reptiles = [];
-      if (widget.selectedindex == 0) {
-        reptiles = firstprovider.reptiles
-            .where(
-              (element) => element.type.contains("SNAKE"),
-            )
-            .toList();
-      } else if ((widget.selectedindex == 1)) {
-        reptiles = firstprovider.reptiles
-            .where(
-              (element) => element.type.contains("LIZARD"),
-            )
-            .toList();
-      } else if (widget.selectedindex == 2) {
-        reptiles = firstprovider.reptiles
-            .where(
-              (element) => element.type.contains("SCORPION"),
-            )
-            .toList();
-      }
+      List<Reptile> reptiles = firstprovider.reptilesbycategory;
+      
 
       return Container(
         height: 235,
@@ -91,7 +74,12 @@ class _LocalReptilesListState extends State<LocalReptilesList> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>  ReptilesPage(id: reptiles[index].id,),
+                                    builder: (context) => ReptilesPage(
+                                      id: reptiles[index].id,
+                                      hasredfleg: reptiles[index].hasRedFlag,
+                                      scientificName:
+                                          reptiles[index].scientificName,
+                                    ),
                                   ),
                                 );
                               },
@@ -135,7 +123,6 @@ class _LocalReptilesListState extends State<LocalReptilesList> {
                                     top: 10,
                                     left: 10,
                                     child: Container(
-                                      
                                       decoration: BoxDecoration(
                                         color: reptiles[index].dangerLevel,
                                         borderRadius: BorderRadius.circular(50),

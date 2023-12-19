@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:herpi/pages/home/widgets/reptile_filter_modal/reptile_filter.dart';
+import 'package:herpi/providers/reptiles_provider.dart';
+import 'package:provider/provider.dart';
 
 class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const MyAppBar({super.key});
+  int selectedindex;
+  MyAppBar({super.key, required this.selectedindex});
 
   @override
   State<MyAppBar> createState() => _MyAppBarState();
@@ -11,8 +15,6 @@ class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _MyAppBarState extends State<MyAppBar> {
-  
-  
   Widget build(BuildContext context) {
     return SafeArea(
       child: AppBar(
@@ -49,12 +51,30 @@ class _MyAppBarState extends State<MyAppBar> {
                     ),
                   ),
                 ),
-                Container(
-                  height: 35,
-                  width: 35,
-                  child: Image.network(
-                    "https://static-00.iconduck.com/assets.00/equalizer-settings-2-icon-512x512-8vp87nng.png",
-                    color: Colors.black,
+                GestureDetector(
+                  onTap: () {
+                    showModalBottomSheet(
+                      backgroundColor: Colors.transparent,
+                      isDismissible: true,
+                      context: context,
+                      builder: (context) {
+                        return ReptileFilterModal();
+                      },
+                    );
+                    Provider.of<ReptilesProvider>(context, listen: false)
+                        .fetchReptileType(widget.selectedindex == 0
+                            ? "SNAKE"
+                            : widget.selectedindex == 1
+                                ? "LIZARD"
+                                : "SCORPION");
+                  },
+                  child: Container(
+                    height: 35,
+                    width: 35,
+                    child: Image.network(
+                      "https://static-00.iconduck.com/assets.00/equalizer-settings-2-icon-512x512-8vp87nng.png",
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ],

@@ -1,23 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:herpi/models/reptiles.dart';
+import 'package:herpi/models/reptiles_query.dart';
+import 'package:herpi/pages/Reptile_page.dart/widgets/gallery.dart';
 import 'package:herpi/providers/reptiles_provider.dart';
 import 'package:provider/provider.dart';
 
 class ReptilesPage extends StatefulWidget {
   int id;
-  ReptilesPage({super.key, required this.id});
+  bool hasredfleg;
+  String scientificName;
+  ReptilesPage({
+    super.key,
+    required this.id,
+    required this.hasredfleg,
+    required this.scientificName,
+  });
 
   @override
   State<ReptilesPage> createState() => _ReptilesPageState();
 }
 
 class _ReptilesPageState extends State<ReptilesPage> {
+  late ReptileQuery reptile1;
+  bool _dataLoaded = false;
   @override
+  void initState() {
+    fetchreptile();
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
-    return Consumer<ReptilesProvider>(builder: (_, firstprovider, __) {
-      List<Reptile> reptiles = firstprovider.allreptiles
-          .where((element) => element.id == widget.id)
-          .toList();
+    {
+      if (!_dataLoaded) {
+        return const CircularProgressIndicator();
+      }
 
       return Scaffold(
         backgroundColor: Colors.grey.shade200,
@@ -59,6 +75,49 @@ class _ReptilesPageState extends State<ReptilesPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (widget.hasredfleg == true)
+                    Column(
+                      children: [
+                        Container(
+                          height: 60,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Container(
+                                  height: 40,
+                                  width: 40,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: Colors.white,
+                                  ),
+                                  child: const Icon(
+                                    Icons.flag,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: Text(
+                                  "წითელ წიგნში შეტანილი სახეობა",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
                   Stack(
                     children: [
                       Container(
@@ -70,7 +129,7 @@ class _ReptilesPageState extends State<ReptilesPage> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
                           child: Image.network(
-                            reptiles[0].image,
+                            reptile1.image,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -80,15 +139,15 @@ class _ReptilesPageState extends State<ReptilesPage> {
                         right: 10,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: reptiles[0].dangerLevel,
+                            color: reptile1.dangerLevel,
                             borderRadius: BorderRadius.circular(50),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(8),
                             child: Text(
-                              reptiles[0].venomous
+                              reptile1.venomous
                                   ? "შხამიანი"
-                                  : reptiles[0].hasMildVenom
+                                  : reptile1.hasMildVenom
                                       ? "სუსტად შხამიანი"
                                       : "უშხამო",
                               style: const TextStyle(
@@ -121,7 +180,7 @@ class _ReptilesPageState extends State<ReptilesPage> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(50),
                               child: Image.network(
-                                reptiles[0].addedBy.avatar!,
+                                reptile1.addedBy.avatar!,
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -135,7 +194,7 @@ class _ReptilesPageState extends State<ReptilesPage> {
                             children: [
                               const Text("გამოაქვეყნა"),
                               Text(
-                                "${reptiles[0].addedBy.firstName} ${reptiles[0].addedBy.lastName}",
+                                "${reptile1.addedBy.firstName} ${reptile1.addedBy.lastName}",
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
@@ -154,7 +213,7 @@ class _ReptilesPageState extends State<ReptilesPage> {
                     ),
                   ),
                   Text(
-                    reptiles[0].name,
+                    reptile1.name,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 220, 3, 137),
@@ -170,7 +229,7 @@ class _ReptilesPageState extends State<ReptilesPage> {
                     ),
                   ),
                   Text(
-                    reptiles[0].scientificName,
+                    reptile1.scientificName,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 220, 3, 137),
@@ -186,19 +245,39 @@ class _ReptilesPageState extends State<ReptilesPage> {
                     ),
                   ),
                   Text(
-                    reptiles[0].family.name,
+                    reptile1.family.name,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 220, 3, 137),
                       fontSize: 15,
                     ),
                   ),
+                  SizedBox(height: 10),
+                  const Text(
+                    "აღწერა",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(reptile1.description),
+                   SizedBox(height: 10),
+                   Gallery(data: reptile1,),
                 ],
               ),
             ),
+            SizedBox(height: 10),
           ],
         ),
       );
-    });
+    }
+  }
+
+  Future<void> fetchreptile() async {
+    reptile1 = await Provider.of<ReptilesProvider>(context, listen: false)
+        .fetchWithId(widget.id);
+    _dataLoaded = true;
+    setState(() {});
   }
 }
